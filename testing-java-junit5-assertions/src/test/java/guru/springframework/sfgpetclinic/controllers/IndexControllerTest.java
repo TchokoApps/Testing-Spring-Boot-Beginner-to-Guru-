@@ -1,9 +1,11 @@
 package guru.springframework.sfgpetclinic.controllers;
 
+import guru.springframework.sfgpetclinic.exceptions.ValueNotFoundException;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.time.Duration;
 
 class IndexControllerTest {
 
@@ -15,18 +17,25 @@ class IndexControllerTest {
     }
 
     @Test
-    void index() {
-        assertEquals("index", controller.index());
-        assertEquals("index", controller.index(), "Wrong View Returned");
-
-        assertEquals("index", controller.index(), () -> "Another Expensive Message " +
-                "Make me only if you have to");
+    public void index() {
+        Assertions.assertEquals("index", controller.index());
     }
 
     @Test
-    void oupsHandler() {
-        assertTrue("notimplemented".equals(controller.oupsHandler()), () -> "This is some expensive " +
-                "Message to build" +
-                "for my test");
+    public void oopsHandler_shouldThrowValueNotFoundException() {
+        Assertions.assertThrows(ValueNotFoundException.class, () -> controller.oopsHandler());
     }
+
+    @Test
+    public void testTimeOut() {
+        Assertions.assertTimeout(Duration.ofMillis(100), () -> Thread.sleep(50));
+        System.out.println("I got here");
+    }
+
+    @Test
+    public void testTimeOutPrempt() {
+        Assertions.assertTimeoutPreemptively(Duration.ofMillis(100), () -> Thread.sleep(2000));
+        System.out.println("I got here also");
+    }
+
 }
