@@ -24,9 +24,12 @@ class SpecialitySDJpaServiceTest {
 
     @InjectMocks
     private SpecialitySDJpaService underTest;
+    private Speciality speciality;
 
     @BeforeEach
     void setUp() {
+
+        speciality = new Speciality();
     }
 
     @Test
@@ -66,11 +69,27 @@ class SpecialitySDJpaServiceTest {
 
     @Test
     public void deleteByObject() {
-        Speciality speciality = new Speciality();
 
         underTest.delete(speciality);
 
         verify(specialtyRepository).delete(any(Speciality.class));
-        
+    }
+
+    @Test
+    public void doThrow() {
+        Mockito.doThrow(new RuntimeException("boom")).when(specialtyRepository).delete(any());
+
+        Assertions.assertThrows(RuntimeException.class, () -> underTest.delete(speciality));
+
+        verify(specialtyRepository).delete(any(Speciality.class));
+    }
+
+    @Test
+    public void testFindByIdThrows() {
+        Mockito.doThrow(new RuntimeException("Runtime Exception occurs")).when(specialtyRepository).findById(anyLong());
+
+        Assertions.assertThrows(RuntimeException.class, () -> underTest.findById(1L));
+
+        Mockito.verify(specialtyRepository).findById(anyLong());
     }
 }

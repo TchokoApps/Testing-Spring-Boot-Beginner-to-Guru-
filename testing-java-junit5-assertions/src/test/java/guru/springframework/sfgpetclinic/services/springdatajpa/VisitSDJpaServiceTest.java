@@ -73,7 +73,7 @@ class VisitSDJpaServiceTest {
 
         when(visitRepository.save(any(Visit.class))).thenReturn(new Visit());
 
-        Visit visit = underTest.save(new Visit());
+        final Visit visit = underTest.save(new Visit());
 
         verify(visitRepository).save(any(Visit.class));
         Assertions.assertNotNull(visit);
